@@ -10,11 +10,7 @@ import {
 import { AnimatedChartBar } from "./AnimatedChartBar";
 import { TranslationsContext } from "../contexts/translationsContext";
 import { SettingsContext } from "../contexts/settingsContext";
-import {
-  DAY_OF_WEEK_SUNDAY,
-  colorBlack,
-  colorGray,
-} from "../constants/constants";
+import { dayOfWeekSunday, colorBlack, colorGray } from "../constants/constants";
 import { ActivityRegistrationsContext } from "../contexts/activityRegistrationsContext";
 import {
   ActivityCompletionContext,
@@ -64,7 +60,7 @@ export const WeeklyActivityChart: React.FC = () => {
     ) {
       const currentDate = new Date();
       const firstDayOfWeek =
-        settings?.preferences.firstDayOfWeek === DAY_OF_WEEK_SUNDAY
+        settings?.preferences.firstDayOfWeek === dayOfWeekSunday
           ? getFirstDayOfWeekSunday(currentDate)
           : getFirstDayOfWeekMonday(currentDate);
       const firstDayOfWeekDate = new Date(

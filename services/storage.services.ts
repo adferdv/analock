@@ -4,11 +4,11 @@ import { GameData, GamesData, TTFEGameData } from "../types/game";
 import { SudokuGrid } from "../components/Sudoku";
 import { BookStorageData } from "../components/EPUBReader";
 import {
-  DAY_OF_WEEK_SUNDAY,
-  FONT_FAMILY_SERIF,
-  FONT_SIZE_MEDIUM,
-  SUDOKU_GAME_NAME,
-  TTFE_GAME_NAME,
+  dayOfWeekSunday,
+  fontFamilySerif,
+  fontSizeMedium,
+  sudokuGameName,
+  ttfeGameName,
   localeFirstDayOfWeekMap,
 } from "../constants/constants";
 import { getLocales } from "react-native-localize";
@@ -124,7 +124,6 @@ export function setSelectedBooks(selectedBooks: InternetArchiveBook[]): void {
   storageInstance.set(BOOKS_STORAGE_KEY, JSON.stringify(selectedBooks));
 }
 
-
 // BOOK DATA FUNCTIONS
 
 /**
@@ -175,8 +174,10 @@ export function getStorageBookData(
 export function updateStorageBookData(book: StorageBook): void {
   const books = getStorageBooks();
   if (books) {
-    const bookToBeUpdatedIndex = books?.findIndex(storageBook => storageBook.id === book.id)
-    books[bookToBeUpdatedIndex].data = book.data
+    const bookToBeUpdatedIndex = books?.findIndex(
+      (storageBook) => storageBook.id === book.id,
+    );
+    books[bookToBeUpdatedIndex].data = book.data;
     storageInstance.set(BOOKS_DATA_STORAGE_KEY, JSON.stringify(books));
   }
 }
@@ -190,7 +191,6 @@ export function setStorageBook(books: StorageBook[]): void {
   storageInstance.set(BOOKS_DATA_STORAGE_KEY, JSON.stringify(books));
 }
 
-
 // GAME STORAGE
 
 export function getStorageGamesData(): GamesData[] {
@@ -201,9 +201,9 @@ export function getStorageGamesData(): GamesData[] {
     gameData = JSON.parse(gameDataString) as GamesData[];
   } else {
     gameData = [
-      { name: SUDOKU_GAME_NAME, won: false },
-      { name: TTFE_GAME_NAME, won: false }
-    ]
+      { name: sudokuGameName, won: false },
+      { name: ttfeGameName, won: false },
+    ];
   }
 
   return gameData;
@@ -226,7 +226,7 @@ export function saveGamesData(gameData: GamesData): void {
 export function saveStorageGamesSudoku(gameData: GamesData) {
   const currentGameData = getStorageGamesData();
   const currentSudokuGameDataIndex = currentGameData?.findIndex(
-    (data) => data.name === SUDOKU_GAME_NAME,
+    (data) => data.name === sudokuGameName,
   );
 
   if (currentGameData !== undefined) {
@@ -250,7 +250,7 @@ export function saveStorageGamesSudoku(gameData: GamesData) {
 export function saveStorageGamesTTFE(gameData: GamesData) {
   const currentGameData = getStorageGamesData();
   const currentTTFEGameDataIndex = currentGameData?.findIndex(
-    (data) => data.name === TTFE_GAME_NAME,
+    (data) => data.name === ttfeGameName,
   );
 
   if (currentGameData !== undefined) {
@@ -356,7 +356,9 @@ export function setSettings(settings: SettingsData): void {
  */
 function loadDefaultSettings(): SettingsData {
   const deviceLocale = getLocales()[0];
-  const localeFirstDayOfWeek = localeFirstDayOfWeekMap.get(deviceLocale.languageTag)
+  const localeFirstDayOfWeek = localeFirstDayOfWeekMap.get(
+    deviceLocale.languageTag,
+  );
 
   const defaultSettings: SettingsData = {
     general: {
@@ -364,14 +366,14 @@ function loadDefaultSettings(): SettingsData {
       language: deviceLocale.languageCode.toUpperCase(),
     },
     bookReader: {
-      fontSize: FONT_SIZE_MEDIUM,
-      fontFamily: FONT_FAMILY_SERIF,
+      fontSize: fontSizeMedium,
+      fontFamily: fontFamilySerif,
     },
     preferences: {
       firstDayOfWeek:
         deviceLocale && localeFirstDayOfWeek
           ? localeFirstDayOfWeek
-          : DAY_OF_WEEK_SUNDAY,
+          : dayOfWeekSunday,
     },
   };
   console.log(`loaded default settings: ${defaultSettings}`);

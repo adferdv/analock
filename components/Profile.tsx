@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text, TouchableOpacity } from "react-native";
+import { Dimensions, Text, TouchableOpacity } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { BaseScreen } from "./BaseScreen";
 import { TranslationsContext } from "../contexts/translationsContext";
@@ -16,8 +16,9 @@ import { formatString } from "../utils/string.utils";
 import Settings from "./Settings";
 import { SettingsContext } from "../contexts/settingsContext";
 import { NavigationHeader } from "./NavigationHeader";
-import { GamesIcon } from "./icons/GamesIcon";
 import { ActivityRegistrationsContext } from "../contexts/activityRegistrationsContext";
+import { defaultProfileUserName } from "../constants/constants";
+import BooksIlustration from "./icons/BooksIlustration";
 
 export type MySpaceStackParamList = {
   MySpace: undefined;
@@ -73,6 +74,8 @@ function MySpace() {
   const userData = getStorageUserData();
   const [streak, setStreak] = useState<number>(0);
   const userRegistrationsContext = useContext(ActivityRegistrationsContext);
+  const { height } = Dimensions.get("window");
+  const profileIconSize = 0.08 * height;
 
   useEffect(() => {
     if (
@@ -119,10 +122,13 @@ function MySpace() {
             { marginBottom: 20 },
           ]}
         >
-          <ProfileCircleContainer iconSize={64}>
-            <GamesIcon />
+          <ProfileCircleContainer iconSize={profileIconSize}>
+            <BooksIlustration
+              width={`${profileIconSize}px`}
+              heigth={`${profileIconSize}px`}
+            />
           </ProfileCircleContainer>
-          <View style={[GENERAL_STYLES.flexCol, { alignSelf: "flex-start" }]}>
+          <View style={[GENERAL_STYLES.flexCol]}>
             <Text
               style={[
                 GENERAL_STYLES.uiText,
@@ -130,7 +136,9 @@ function MySpace() {
                 GENERAL_STYLES.textExtraBig,
               ]}
             >
-              {userData.userName !== undefined ? userData.userName : "Guest"}
+              {userData.userName !== undefined
+                ? userData.userName
+                : defaultProfileUserName}
             </Text>
             {profileTranslations &&
               !userRegistrationsContext.activityRegistrationsData.error &&

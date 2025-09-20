@@ -17,7 +17,7 @@ import { emptyDateTime } from "../utils/date.utils";
 import { useSaveOnExit } from "../hooks/useSaveOnExit";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import { GENERAL_STYLES } from "../constants/general.styles";
-import { SWIPE_THRESHOLD } from "../constants/constants";
+import { swipeThreshold } from "../constants/constants";
 import {
   Gesture,
   GestureDetector,
@@ -333,7 +333,7 @@ const EpubReader: React.FC<EpubReaderProps> = ({ ebookId }) => {
       const { translationX, translationY } = event;
 
       if (Math.abs(translationX) > Math.abs(translationY)) {
-        if (Math.abs(translationX) > SWIPE_THRESHOLD) {
+        if (Math.abs(translationX) > swipeThreshold) {
           if (translationX > 0) {
             runOnJS(setCurrentFilePage)(currentFilePage - 1);
           } else {

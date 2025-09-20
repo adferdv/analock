@@ -4,13 +4,13 @@ import { GENERAL_STYLES } from "../constants/general.styles";
 import { ButtonGroup } from "./ButtonGroup";
 import { useContext, useEffect, useState } from "react";
 import {
-  FONT_FAMILY_OPEN_DYSLEXIC,
-  FONT_FAMILY_SERIF,
-  FONT_SIZE_BIG,
-  FONT_SIZE_MEDIUM,
-  FONT_SIZE_SMALL,
-  LANGUAGE_ENGLISH,
-  LANGUAGE_SPANISH,
+  fontFamilyOpenDyslexic,
+  fontFamilySerif,
+  fontSizeBig,
+  fontSizeMedium,
+  fontSizeSmall,
+  languageEnglish,
+  languageSpanish,
 } from "../constants/constants";
 import { getSettings } from "../services/storage.services";
 import { useSaveOnExit } from "../hooks/useSaveOnExit";
@@ -25,35 +25,35 @@ function Settings() {
   const languageRadioGroup: SettingsRadioButton[] = [
     {
       text: settingsTranslations?.laguageEng,
-      value: LANGUAGE_ENGLISH,
+      value: languageEnglish,
     },
     {
       text: settingsTranslations?.languageSpa,
-      value: LANGUAGE_SPANISH,
+      value: languageSpanish,
     },
   ];
   const fontSizeRadioGroup: SettingsRadioButton[] = [
     {
       text: settingsTranslations?.textSizeSmall,
-      value: FONT_SIZE_SMALL,
+      value: fontSizeSmall,
     },
     {
       text: settingsTranslations?.textSizeMedium,
-      value: FONT_SIZE_MEDIUM,
+      value: fontSizeMedium,
     },
     {
       text: settingsTranslations?.textSizeBig,
-      value: FONT_SIZE_BIG,
+      value: fontSizeBig,
     },
   ];
   const fontFamilyRadioGroup: SettingsRadioButton[] = [
     {
       text: settingsTranslations?.textFontSerif,
-      value: FONT_FAMILY_SERIF,
+      value: fontFamilySerif,
     },
     {
       text: settingsTranslations?.textFontOpenDyslexic,
-      value: FONT_FAMILY_OPEN_DYSLEXIC,
+      value: fontFamilyOpenDyslexic,
     },
   ];
 
@@ -75,7 +75,7 @@ function Settings() {
       (fontFamily) => fontFamily.value === userSettings.bookReader.fontFamily,
     ),
   );
-  console.log(`current settings: ${userSettings}`)
+  console.log(`current settings: ${userSettings}`);
 
   // save selected settings when user exits section or app
   useSaveOnExit({
@@ -109,7 +109,7 @@ function Settings() {
             style={[
               GENERAL_STYLES.uiText,
               GENERAL_STYLES.textBlack,
-              GENERAL_STYLES.textExtraBig
+              GENERAL_STYLES.textExtraBig,
             ]}
           >
             {settingsTranslations?.general}
@@ -133,7 +133,7 @@ function Settings() {
             style={[
               GENERAL_STYLES.uiText,
               GENERAL_STYLES.textBlack,
-              GENERAL_STYLES.textExtraBig
+              GENERAL_STYLES.textExtraBig,
             ]}
           >
             {settingsTranslations?.bookReader}

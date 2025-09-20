@@ -1,11 +1,11 @@
-import { LANGUAGE_ENGLISH, LANGUAGE_SPANISH } from "../constants/constants";
+import { languageEnglish, languageSpanish } from "../constants/constants";
 import { englishTranslations } from "../translations/eng";
 import { spanishTranslations } from "../translations/es";
 import { getSettings } from "./storage.services";
 
 export enum Language {
-  English = LANGUAGE_ENGLISH,
-  Spanish = LANGUAGE_SPANISH,
+  English = languageEnglish,
+  Spanish = languageSpanish,
 }
 
 export function getSetLanguageTranslations(): Translation {
@@ -14,7 +14,7 @@ export function getSetLanguageTranslations(): Translation {
 }
 
 export function getTranslations(language: Language): Translation {
-  if (language === LANGUAGE_ENGLISH) {
+  if (language === languageEnglish) {
     return englishTranslations;
   } else {
     return spanishTranslations;
