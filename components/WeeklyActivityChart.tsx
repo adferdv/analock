@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { View } from "react-native";
 import { G, Line, Svg, Text } from "react-native-svg";
 import {
@@ -11,11 +11,11 @@ import { AnimatedChartBar } from "./AnimatedChartBar";
 import { TranslationsContext } from "../contexts/translationsContext";
 import { SettingsContext } from "../contexts/settingsContext";
 import { dayOfWeekSunday, colorBlack, colorGray } from "../constants/constants";
-import { ActivityRegistrationsContext } from "../contexts/activityRegistrationsContext";
-import {
-  ActivityCompletionContext,
-  ActivityKind,
-} from "../contexts/activityCompletionContext";
+import { ActivityRegistration } from "../services/activityRegistrations.services";
+
+interface WeeklyActivityChartProps {
+  fullActivityRegistrations: ActivityRegistration[];
+}
 
 interface ChartData {
   label: string;
@@ -25,7 +25,9 @@ interface ChartData {
 const Y_AXIS_MAX_SCORE = 5;
 const Y_AXIS_TICKS = Array.from({ length: Y_AXIS_MAX_SCORE + 1 }, (_, i) => i);
 
-export const WeeklyActivityChart: React.FC = () => {
+export const WeeklyActivityChart: React.FC<WeeklyActivityChartProps> = ({
+  fullActivityRegistrations,
+}) => {
   const height = 200;
   const padding = 20;
   const barSpacing = 10;
@@ -33,31 +35,23 @@ export const WeeklyActivityChart: React.FC = () => {
   const labelFontSize = 10;
   const textAndGridColor = colorGray;
   const barColor = colorBlack;
-  const [weeklyChartActivityData, setWeeklyChartActivityData] = useState<
-    ChartData[]
-  >([]);
   const [width, setWidth] = useState<number>(0);
   const translations = useContext(TranslationsContext)?.translations;
   const settings = useContext(SettingsContext)?.settings;
-  const numBars = weeklyChartActivityData.length;
   const chartHeight = height - padding * 2;
   const scaleY = chartHeight / Y_AXIS_MAX_SCORE;
   const chartWidth = width - padding * 2;
+  const weeklyChartActivityData = useMemo(
+    () => getWeeklyActivityChartData(),
+    [fullActivityRegistrations, settings],
+  );
+  const numBars = weeklyChartActivityData.length;
   const barWidth = (chartWidth - (numBars - 1) * barSpacing) / numBars;
-  const activityRegistrationsContext = useContext(ActivityRegistrationsContext);
-  const activityCompletionContext = useContext(ActivityCompletionContext);
 
-  console.log(activityRegistrationsContext?.activityRegistrationsData.error);
-
-  // Hook to load user's weekly activity
-  useEffect(() => {
-    if (
-      activityRegistrationsContext &&
-      activityRegistrationsContext.activityRegistrationsData
-        .activityRegistrations.length > 0 &&
-      activityCompletionContext &&
-      activityCompletionContext.activityCompletionMap.size > 0
-    ) {
+  // Function to load user's weekly activity
+  function getWeeklyActivityChartData(): ChartData[] {
+    const chartData: ChartData[] = [];
+    if (fullActivityRegistrations && fullActivityRegistrations.length > 0) {
       const currentDate = new Date();
       const firstDayOfWeek =
         settings?.preferences.firstDayOfWeek === dayOfWeekSunday
@@ -78,8 +72,6 @@ export const WeeklyActivityChart: React.FC = () => {
         lastDayOfWeekDate.setMonth(lastDayOfWeekDate.getMonth() - 1);
       }
 
-      const chartData: ChartData[] = [];
-
       for (let i = firstDayOfWeek; i < firstDayOfWeek + 7; i++) {
         const date = new Date(
           currentDate.getFullYear(),
@@ -88,16 +80,6 @@ export const WeeklyActivityChart: React.FC = () => {
         );
         emptyDateTime(date);
 
-        const fullActivityRegistrations = [
-          ...activityRegistrationsContext.activityRegistrationsData
-            .activityRegistrations,
-        ].concat(
-          (
-            activityCompletionContext.activityCompletionMap.get(
-              ActivityKind.Diary,
-            ) as DiaryEntriesData
-          ).diaryEntries,
-        );
         const dateUserRegistrations = fullActivityRegistrations.filter(
           (userRegistration) =>
             userRegistration.registration.registrationDate === date.valueOf(),
@@ -110,9 +92,9 @@ export const WeeklyActivityChart: React.FC = () => {
           value: dateUserRegistrations.length,
         });
       }
-      setWeeklyChartActivityData(chartData);
     }
-  }, [activityRegistrationsContext, settings]);
+    return chartData;
+  }
 
   return (
     <View

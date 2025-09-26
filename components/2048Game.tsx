@@ -152,7 +152,7 @@ export function Game2048() {
       if (gameOver || won) return;
 
       const isHorizontalMove = direction !== "up" && direction !== "down";
-      let newBoard = board.map((row) => [...row]);
+      const newBoard = board.map((row) => [...row]);
       let newScore = score;
       let moved = false;
       let moveWon = false;

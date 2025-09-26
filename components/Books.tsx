@@ -7,7 +7,7 @@ import {
   NativeStackNavigationProp,
 } from "@react-navigation/native-stack";
 import BookDetailScreen from "./Book";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { downloadAndUnzipEpub } from "../services/download.services";
 import { TranslationsContext } from "../contexts/translationsContext";
@@ -25,6 +25,7 @@ import {
   ActivityCompletionContext,
   ActivityKind,
 } from "../contexts/activityCompletionContext";
+import { BaseScreen } from "./BaseScreen";
 
 const BOOK_NUMBER = 2;
 
@@ -96,27 +97,22 @@ const BooksScreen = () => {
 
 const BooksWrapper: React.FC = () => {
   const userData = getStorageUserData();
-  const [subject, setSubject] = useState<InternetArchiveSubject>();
-  const [shownSubjects, setShownSubjects] = useState<InternetArchiveSubject[]>(
-    [],
+  const [subject, setSubject] = useState(
+    !userData.selectedBookSubject
+      ? undefined
+      : (userData.selectedBookSubject as InternetArchiveSubject),
   );
   const MAX_SUBJECTS = 4;
+  const shownSubjects = useMemo(() => {
+    const subjectValues = Object.values(InternetArchiveSubject);
+    const selectedSubjects: InternetArchiveSubject[] = [];
 
-  // hook to show subject selection
-  useEffect(() => {
-    if (userData.selectedBookSubject !== undefined) {
-      setSubject(userData.selectedBookSubject as InternetArchiveSubject);
-    } else {
-      const subjectValues = Object.values(InternetArchiveSubject);
-      const selectedSubjects: InternetArchiveSubject[] = [];
-
-      for (let i = 0; i < MAX_SUBJECTS; i++) {
-        const randomIndex = Math.floor(Math.random() * subjectValues.length);
-        selectedSubjects.push(subjectValues[randomIndex]);
-        subjectValues.splice(randomIndex, 1);
-      }
-      setShownSubjects(selectedSubjects);
+    for (let i = 0; i < MAX_SUBJECTS; i++) {
+      const randomIndex = Math.floor(Math.random() * subjectValues.length);
+      selectedSubjects.push(subjectValues[randomIndex]);
+      subjectValues.splice(randomIndex, 1);
     }
+    return selectedSubjects;
   }, []);
 
   return subject ? (
@@ -191,7 +187,7 @@ const Books: React.FC<BooksProps> = ({ subject }) => {
 
   return (
     translationsContext && (
-      <>
+      <BaseScreen>
         {loading && !errorMessage && (
           <LoadingIndicator
             text={translationsContext.translations.books.donwloadingContent}
@@ -271,7 +267,6 @@ const Books: React.FC<BooksProps> = ({ subject }) => {
                   </FlatListCard>
                 )}
                 contentContainerStyle={[
-                  GENERAL_STYLES.baseScreenPadding,
                   GENERAL_STYLES.whiteBackgroundColor,
                   GENERAL_STYLES.flexGrow,
                 ]}
@@ -282,7 +277,7 @@ const Books: React.FC<BooksProps> = ({ subject }) => {
             )}
           </>
         )}
-      </>
+      </BaseScreen>
     )
   );
 };
