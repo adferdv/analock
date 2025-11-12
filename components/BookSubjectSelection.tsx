@@ -37,49 +37,51 @@ export const BookSubjectSelection: React.FC<BookSubjectSelectionProps> = ({
     );
   }
   return (
-    <BaseScreen>
-      <FlatList
-        numColumns={2}
-        data={shownSubjects}
-        keyExtractor={(subject) => subject.valueOf()}
-        renderItem={({ item, index }) => (
-          <FlatListCard
-            flatListIndex={index}
-            onPress={() => {
-              const updatedUserData = { ...userData };
-              updatedUserData.selectedBookSubject = item.valueOf();
-              setStorageUserData(updatedUserData);
-              setSubject(item);
-            }}
-          >
-            <View
-              style={[
-                GENERAL_STYLES.defaultBorder,
-                GENERAL_STYLES.defaultBorderWidth,
-                GENERAL_STYLES.alignCenter,
-                GENERAL_STYLES.borderRadiusBig,
-                GENERAL_STYLES.fiveteenPercentWindowHeigthVerticalPadding,
-              ]}
+    shownSubjects.length > 0 && (
+      <BaseScreen>
+        <FlatList
+          numColumns={2}
+          data={shownSubjects}
+          keyExtractor={(subject) => subject.valueOf()}
+          renderItem={({ item, index }) => (
+            <FlatListCard
+              flatListIndex={index}
+              onPress={() => {
+                const updatedUserData = { ...userData };
+                updatedUserData.selectedBookSubject = item.valueOf();
+                setStorageUserData(updatedUserData);
+                setSubject(item);
+              }}
             >
-              <Text
+              <View
                 style={[
-                  GENERAL_STYLES.uiText,
-                  GENERAL_STYLES.textBlack,
-                  GENERAL_STYLES.textCenter,
-                  { flexWrap: "wrap" },
+                  GENERAL_STYLES.defaultBorder,
+                  GENERAL_STYLES.defaultBorderWidth,
+                  GENERAL_STYLES.alignCenter,
+                  GENERAL_STYLES.borderRadiusBig,
+                  GENERAL_STYLES.fiveteenPercentWindowHeigthVerticalPadding,
                 ]}
               >
-                {getSubjectTranslation(item)}
-              </Text>
-            </View>
-          </FlatListCard>
-        )}
-        contentContainerStyle={[
-          GENERAL_STYLES.flexGap,
-          GENERAL_STYLES.flexGrow,
-        ]}
-        removeClippedSubviews={false}
-      />
-    </BaseScreen>
+                <Text
+                  style={[
+                    GENERAL_STYLES.uiText,
+                    GENERAL_STYLES.textBlack,
+                    GENERAL_STYLES.textCenter,
+                    { flexWrap: "wrap" },
+                  ]}
+                >
+                  {getSubjectTranslation(item)}
+                </Text>
+              </View>
+            </FlatListCard>
+          )}
+          contentContainerStyle={[
+            GENERAL_STYLES.flexGap,
+            GENERAL_STYLES.flexGrow,
+          ]}
+          removeClippedSubviews={false}
+        />
+      </BaseScreen>
+    )
   );
 };

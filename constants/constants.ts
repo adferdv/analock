@@ -1,15 +1,16 @@
-export const SUDOKU_GAME_NAME = "Sudoku";
-export const TTFE_GAME_NAME = "2048";
-export const SWIPE_THRESHOLD = 50;
-export const FONT_SIZE_SMALL = 12;
-export const FONT_SIZE_MEDIUM = 14;
-export const FONT_SIZE_BIG = 16;
-export const FONT_FAMILY_SERIF = "Merryweather";
-export const FONT_FAMILY_OPEN_DYSLEXIC = "OpenDyslexic";
-export const LANGUAGE_ENGLISH = "EN";
-export const LANGUAGE_SPANISH = "ES";
-export const DAY_OF_WEEK_SUNDAY = 0;
-export const DAY_OF_WEEK_MONDAY = 1;
+export const sudokuGameName = "Sudoku";
+export const ttfeGameName = "2048";
+export const swipeThreshold = 50;
+export const fontSizeSmall = 12;
+export const fontSizeMedium = 14;
+export const fontSizeBig = 16;
+export const fontFamilySerif = "Merryweather";
+export const fontFamilyOpenDyslexic = "OpenDyslexic";
+export const languageEnglish = "EN";
+export const languageSpanish = "ES";
+export const dayOfWeekSunday = 0;
+export const dayOfWeekMonday = 1;
+export const defaultProfileUserName = "Guest";
 export const localeFirstDayOfWeekMap = new Map<string, number>([
   ["en-US", 0],
   ["en-CA", 0],
