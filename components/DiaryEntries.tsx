@@ -81,7 +81,7 @@ const DiaryEntries: React.FC = () => {
           ActivityKind.Diary,
         ) as DiaryEntriesData;
 
-      if (diaryEntriesData?.diaryEntries.length > 0) {
+      if (diaryEntriesData.diaryEntries) {
         setLoading(false);
       }
       setDiaryEntriesData(diaryEntriesData);
@@ -91,7 +91,7 @@ const DiaryEntries: React.FC = () => {
   return !diaryEntriesData?.error ? (
     <View
       style={[
-        GENERAL_STYLES.generalHorizontalPadding,
+        GENERAL_STYLES.baseScreenPadding,
         GENERAL_STYLES.whiteBackgroundColor,
         GENERAL_STYLES.flexGrow,
       ]}
@@ -99,7 +99,7 @@ const DiaryEntries: React.FC = () => {
       {loading ? (
         <LoadingIndicator />
       ) : (
-        <SafeAreaView>
+        <SafeAreaView style={[GENERAL_STYLES.flexGrow]}>
           <TouchableOpacity
             disabled={isAddDiaryEntryButtonDisabled(
               diaryEntriesData.diaryEntries,
@@ -129,7 +129,7 @@ const DiaryEntries: React.FC = () => {
               removeClippedSubviews={false}
               contentContainerStyle={[
                 GENERAL_STYLES.flexGap,
-                GENERAL_STYLES.generalVerticalPadding,
+                GENERAL_STYLES.generalBottomPadding,
               ]}
               renderItem={({ item, index }) => {
                 const diaryEntry = item;

@@ -1,5 +1,5 @@
 import { DateData } from "react-native-calendars";
-import { DAY_OF_WEEK_SUNDAY } from "../constants/constants";
+import { dayOfWeekSunday } from "../constants/constants";
 
 const currentDate = new Date();
 
@@ -32,7 +32,7 @@ export function areDateWeeksEqual(
   let firstDayOfWeekDate1;
   let firstDayOfWeekDate2;
 
-  if (userSettings.preferences.firstDayOfWeek === DAY_OF_WEEK_SUNDAY) {
+  if (userSettings.preferences.firstDayOfWeek === dayOfWeekSunday) {
     firstDayOfWeekDate1 = getFirstDayOfWeekSunday(date1);
     firstDayOfWeekDate2 = getFirstDayOfWeekSunday(date2);
   } else {

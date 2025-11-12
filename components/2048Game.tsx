@@ -23,8 +23,8 @@ import {
   colorBlack,
   colorGray,
   colorWhiteBackground,
-  SWIPE_THRESHOLD,
-  TTFE_GAME_NAME,
+  swipeThreshold,
+  ttfeGameName,
 } from "../constants/constants";
 import { TTFEGameData } from "../types/game";
 import { GameWon } from "./GameWon";
@@ -73,7 +73,7 @@ const colors: Record<number, string> = {
 
 export function Game2048() {
   const ttfeGameData = getStorageGamesData()?.find(
-    (data) => data.name === TTFE_GAME_NAME,
+    (data) => data.name === ttfeGameName,
   );
   const [board, setBoard] = useState<TTFEBoard>(() => initializeBoard());
   const [score, setScore] = useState<number>(() => initializeScore());
@@ -84,7 +84,7 @@ export function Game2048() {
   const gamesTranslations = useContext(TranslationsContext)?.translations.games;
 
   useSaveOnExit({
-    name: TTFE_GAME_NAME,
+    name: ttfeGameName,
     data: { ttfeBoard: board, ttfeScore: score },
     won,
   });
@@ -107,7 +107,9 @@ export function Game2048() {
   }
 
   function initializeScore(): number {
-    return ttfeGameData ? (ttfeGameData.data as TTFEGameData).ttfeScore : 0;
+    return ttfeGameData && ttfeGameData.data
+      ? (ttfeGameData.data as TTFEGameData).ttfeScore
+      : 0;
   }
 
   /**
@@ -150,7 +152,7 @@ export function Game2048() {
       if (gameOver || won) return;
 
       const isHorizontalMove = direction !== "up" && direction !== "down";
-      let newBoard = board.map((row) => [...row]);
+      const newBoard = board.map((row) => [...row]);
       let newScore = score;
       let moved = false;
       let moveWon = false;
@@ -187,12 +189,10 @@ export function Game2048() {
           const userSettings = getSettings();
           if (userSettings.general.enableOnlineFeatures) {
             const currentDate = new Date();
-            const userData = getStorageUserData();
             emptyDateTime(currentDate);
             addUserGameRegistration({
-              gameName: TTFE_GAME_NAME,
+              gameName: ttfeGameName,
               registrationDate: currentDate.valueOf(),
-              userId: userData.userId,
             });
           }
           setWon(true);
@@ -294,7 +294,7 @@ export function Game2048() {
       translateY.value = translationY;
 
       if (Math.abs(translationX) > Math.abs(translationY)) {
-        if (Math.abs(translationX) > SWIPE_THRESHOLD) {
+        if (Math.abs(translationX) > swipeThreshold) {
           if (translationX > 0) {
             runOnJS(moveTiles)("right");
           } else {
@@ -302,7 +302,7 @@ export function Game2048() {
           }
         }
       } else {
-        if (Math.abs(translationY) > SWIPE_THRESHOLD) {
+        if (Math.abs(translationY) > swipeThreshold) {
           if (translationY > 0) {
             runOnJS(moveTiles)("down");
           } else {

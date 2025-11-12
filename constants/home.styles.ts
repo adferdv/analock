@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from "react-native";
 
-const { width, height } = Dimensions.get("window")
+const { width, height } = Dimensions.get("window");
 
 export const HOME_STYLES = StyleSheet.create({
   contentCard: {
@@ -15,7 +15,7 @@ export const HOME_STYLES = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
     paddingHorizontal: 25,
     paddingVertical: 30,
     borderBottomLeftRadius: 25,

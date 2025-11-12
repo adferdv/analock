@@ -63,7 +63,6 @@ const Home: React.FC = () => {
   const activityCompletionContext = useContext(ActivityCompletionContext);
   useWipePeriodicContent();
   const userDataContext = useContext(UserDataContext);
-  console.log(`api root url: ${process.env.API_ROOT_URL}`);
   // Hook to redirect to login if user is not authenticated and online features are enabled
   useEffect(() => {
     if (

@@ -1,6 +1,5 @@
 import { DateData, MarkedDates } from "react-native-calendars/src/types";
-import { getSettings } from "../services/storage.services";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   areDatesEqual,
   dateToDateData,
@@ -71,7 +70,6 @@ const RegistrationsCalendar: React.FC = () => {
     selectedDotColor: "blue",
   };
   const currentDate = new Date();
-  const [markedDates, setMarkedDates] = useState<MarkedDates>({});
   const [currentDateData, setCurrentDateData] = useState<DateData>(
     dateToDateData(currentDate),
   );
@@ -81,6 +79,12 @@ const RegistrationsCalendar: React.FC = () => {
   const settings = useContext(SettingsContext)?.settings;
   const activityRegistrationsContext = useContext(ActivityRegistrationsContext);
   const activityCompletionContext = useContext(ActivityCompletionContext);
+  const fullActivityRegistrations: ActivityRegistration[] =
+    getFullActivityRegistrations();
+  const markedDates = useMemo(
+    () => getMarkedDates(),
+    [currentDateData, fullActivityRegistrations],
+  );
 
   /**
    * Aux function to get the dots object from a registration object
@@ -129,29 +133,31 @@ const RegistrationsCalendar: React.FC = () => {
 
     return text;
   }
-  const [fullActivityRegistrations, setFullActivityRegistrations] = useState<
-    ActivityRegistration[]
-  >([]);
 
-  useEffect(() => {
+  /**
+   * Function to get all the user's activity registrations
+   */
+  function getFullActivityRegistrations(): ActivityRegistration[] {
     if (activityCompletionContext && activityRegistrationsContext) {
-      setFullActivityRegistrations(
-        [
-          ...activityRegistrationsContext.activityRegistrationsData
-            .activityRegistrations,
-        ].concat(
-          (
-            activityCompletionContext.activityCompletionMap.get(
-              ActivityKind.Diary,
-            ) as DiaryEntriesData
-          ).diaryEntries,
-        ),
+      return [
+        ...activityRegistrationsContext.activityRegistrationsData
+          .activityRegistrations,
+      ].concat(
+        (
+          activityCompletionContext.activityCompletionMap.get(
+            ActivityKind.Diary,
+          ) as DiaryEntriesData
+        ).diaryEntries,
       );
     }
-  }, []);
+    return [];
+  }
 
-  // Hook to mark the registrations on calendar of the current month
-  useEffect(() => {
+  /**
+   * Function to mark the registrations on calendar of the currently selected month.
+   */
+  function getMarkedDates(): MarkedDates {
+    const updatedMarkedDates: MarkedDates = {};
     if (fullActivityRegistrations) {
       const startDate = new Date(
         currentDateData.year,
@@ -170,7 +176,6 @@ const RegistrationsCalendar: React.FC = () => {
       } else {
         endDate = new Date(currentDateData.year, currentDateData.month);
       }
-      const updatedMarkedDates: MarkedDates = {};
       const monthUserRegistrations = fullActivityRegistrations.filter(
         (userRegistration) =>
           userRegistration.registration.registrationDate >=
@@ -195,9 +200,9 @@ const RegistrationsCalendar: React.FC = () => {
           };
         }
       }
-      setMarkedDates(updatedMarkedDates);
     }
-  }, [currentDateData, fullActivityRegistrations]);
+    return updatedMarkedDates;
+  }
 
   console.log(
     `current date data: ${currentDateData.month}, current date: ${currentDate.getMonth()}`,
