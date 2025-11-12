@@ -189,12 +189,10 @@ export function Game2048() {
           const userSettings = getSettings();
           if (userSettings.general.enableOnlineFeatures) {
             const currentDate = new Date();
-            const userData = getStorageUserData();
             emptyDateTime(currentDate);
             addUserGameRegistration({
               gameName: ttfeGameName,
               registrationDate: currentDate.valueOf(),
-              userId: userData.userId,
             });
           }
           setWon(true);

@@ -25,13 +25,11 @@ interface DiaryEntryRegistration {
 interface AddBookRegistrationRequest {
   internetArchiveId: string;
   registrationDate: number;
-  userId: number;
 }
 
 interface AddGameRegistrationRequest {
   gameName: string;
   registrationDate: number;
-  userId: number;
 }
 
 interface ActivityRegistrationsData {

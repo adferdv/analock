@@ -110,12 +110,10 @@ const EpubReader: React.FC<EpubReaderProps> = ({ ebookId }) => {
         activityRegistrationsContext
       ) {
         const currentDate = new Date();
-        const userData = getStorageUserData();
         emptyDateTime(currentDate);
         addUserBookRegistration({
           internetArchiveId: ebookId,
           registrationDate: currentDate.valueOf(),
-          userId: userData.userId,
         })
           .then((savedBookRegistration) => {
             // Update context adding saved book registration

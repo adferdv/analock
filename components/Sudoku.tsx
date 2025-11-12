@@ -300,13 +300,11 @@ const NumberPad: React.FC<NumberPadProps> = ({
           activityRegistrationsContext
         ) {
           const currentDate = new Date();
-          const userData = getStorageUserData();
 
           emptyDateTime(currentDate);
           addUserGameRegistration({
             gameName: sudokuGameName,
             registrationDate: currentDate.valueOf(),
-            userId: userData.userId,
           })
             .then((savedGameRegistration) => {
               // Update context adding saved book registration
