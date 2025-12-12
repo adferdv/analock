@@ -24,6 +24,7 @@ import {
   ActivityCompletionContext,
   ActivityKind,
 } from "../contexts/activityCompletionContext";
+import { UserDataContext } from "../contexts/userDataContext";
 
 export type MySpaceStackParamList = {
   MySpace: undefined;
@@ -76,11 +77,15 @@ function MySpace() {
   const userSettingsContext = useContext(SettingsContext);
   const profileTranslations =
     useContext(TranslationsContext)?.translations.profile;
-  const userData = getStorageUserData();
+  const userDataContext = useContext(UserDataContext);
   const activityCompletionContext = useContext(ActivityCompletionContext);
   const userRegistrationsContext = useContext(ActivityRegistrationsContext);
   const fullActivityRegistrations = useMemo(() => {
-    if (activityCompletionContext && userRegistrationsContext) {
+    if (
+      userDataContext?.userData.authenticated &&
+      activityCompletionContext &&
+      userRegistrationsContext
+    ) {
       return [
         ...userRegistrationsContext.activityRegistrationsData
           .activityRegistrations,
@@ -134,6 +139,7 @@ function MySpace() {
   }
 
   return (
+    userDataContext &&
     userRegistrationsContext && (
       <BaseScreen>
         <View
@@ -158,8 +164,8 @@ function MySpace() {
                 GENERAL_STYLES.textExtraBig,
               ]}
             >
-              {userData.userName !== undefined
-                ? userData.userName
+              {userDataContext.userData.userName
+                ? userDataContext.userData.userName
                 : defaultProfileUserName}
             </Text>
             {profileTranslations &&
