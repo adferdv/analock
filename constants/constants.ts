@@ -11,6 +11,7 @@ export const languageSpanish = "ES";
 export const dayOfWeekSunday = 0;
 export const dayOfWeekMonday = 1;
 export const defaultProfileUserName = "Guest";
+export const maxBookDownload = 2;
 export const localeFirstDayOfWeekMap = new Map<string, number>([
   ["en-US", 0],
   ["en-CA", 0],
