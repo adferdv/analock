@@ -29,10 +29,10 @@ class BackgroundDownloadModule(
     fun startDownload(url: String, filename: String, promise: Promise) {
         val context = reactApplicationContext
         downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        Log.d("BackgroundDownloadModule", "Called download module with $url")
+        Log.d("BackgroundDownloadModule", "Called download module with url: $url and file name: $filename")
 
         try {
-            val uri = Uri.parse("$url/$filename")
+            val uri = Uri.parse("$url?file=$filename")
             val externalFilesDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
             val absoluteFilePath = File(externalFilesDir, filename).absolutePath
             val query = DownloadManager.Query().apply {

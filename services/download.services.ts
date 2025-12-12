@@ -11,11 +11,11 @@ export const APP_DOCUMENTS_PATH = `${RNFS.ExternalDirectoryPath}/Documents`;
  * @param ebookId - The item identifier
  */
 export async function downloadAndUnzipEpub(book: InternetArchiveBook) {
-  const epubUrl = `https://archive.org/download/${book.identifier}`;
+  const downloadUrl = `${process.env.API_ROOT_URL}api/v1/internetArchive/books/${encodeURIComponent(book.identifier)}/download`;
   const unzipPath = `${APP_DOCUMENTS_PATH}/${book.identifier}`;
   const { BackgroundDownloadModule } = NativeModules;
 
-  if (epubUrl !== undefined) {
+  if (downloadUrl !== undefined) {
     const bookExists = await RNFS.exists(unzipPath);
 
     if (!bookExists) {
@@ -24,7 +24,7 @@ export async function downloadAndUnzipEpub(book: InternetArchiveBook) {
         try {
           const downloadedFilePath =
             await BackgroundDownloadModule.startDownload(
-              epubUrl,
+              downloadUrl,
               book.epubFile,
             );
           console.log(
@@ -38,7 +38,7 @@ export async function downloadAndUnzipEpub(book: InternetArchiveBook) {
           await RNFS.unlink(downloadedFilePath);
         } catch {
           // Remove ebook unzip directory. If donwload fails unzip will create it anyways.
-          await RNFS.unlink(unzipPath)
+          await RNFS.unlink(unzipPath);
           throw new Error("Download error");
         }
       }

@@ -1,4 +1,5 @@
-import axios from "axios";
+import { maxBookDownload } from "../constants/constants";
+import { AXIOS_INSTANCE } from "./interceptors";
 
 /**
  * Gets books from OpenLibrary API, based on the request parameters.
@@ -9,34 +10,35 @@ import axios from "axios";
 export async function getOpenLibraryBooksBySubject(
   req: OpenLibraryRequest,
 ): Promise<InternetArchiveBook[]> {
-  const GET_BOOKS_QUERY = `https://archive.org/advancedsearch.php?q=collection:opensource+AND+language:english+AND+subject:${encodeURIComponent(req.subject)}+AND+mediatype:texts&fl=title,creator,identifier&sort[]=downloads+desc&sort[]=avg_rating+desc&rows=${req.limit + 10}&page=1&output=json`;
+  const getBooksUrl = `${process.env.API_ROOT_URL}api/v1/internetArchive/books/search?collection=opensource&language=english&subject=${encodeURIComponent(req.subject)}&rows=10`;
   const selectedBooks: InternetArchiveBook[] = [];
 
   try {
-    const booksResponse = await axios({
-      url: GET_BOOKS_QUERY,
-      method: "GET",
-      responseType: "json",
-    });
+    const booksResponse = await AXIOS_INSTANCE.get(getBooksUrl);
     const res = booksResponse.data.response as OpenLibraryResponse;
     const internetArchiveResponseBooks = res.docs;
 
-    for (const book of internetArchiveResponseBooks) {
-      if (selectedBooks.length === req.limit) break
-
+    for (
+      let i = 0;
+      selectedBooks.length < maxBookDownload &&
+      i < internetArchiveResponseBooks.length;
+      i++
+    ) {
+      const book = internetArchiveResponseBooks[i];
       const bookMetadata = await getBookMetadata({ id: book.identifier });
-      book.epubFile = bookMetadata?.files.find(
+      book.epubFile = bookMetadata?.files?.find(
         (file) => file.format === "EPUB",
       )?.name;
 
       if (book.epubFile) {
-        selectedBooks.push(book)
+        selectedBooks.push(book);
       }
     }
   } catch {
     throw Error("Error retrieving books from open library API");
   }
 
+  console.log("selected books: ", selectedBooks);
   return selectedBooks;
 }
 
@@ -49,17 +51,13 @@ export async function getBookMetadata(
   req: InternetArchiveMetadataRequest,
 ): Promise<InternetArchiveMetadataResponse | null> {
   let result = null;
-  const getMetadataQuery = `https://archive.org/metadata/${req.id}`;
+  const getBookMetadataUrl = `${process.env.API_ROOT_URL}api/v1/internetArchive/books/${encodeURIComponent(req.id)}/metadata`;
 
   try {
-    const bookMetadataResponse = await axios({
-      url: getMetadataQuery,
-      method: "GET",
-      responseType: "json",
-    });
+    const bookMetadataResponse = await AXIOS_INSTANCE.get(getBookMetadataUrl);
     result = bookMetadataResponse.data as InternetArchiveMetadataResponse;
-  } catch (error) {
-    console.error(error);
+  } catch {
+    throw Error("Error retrieving book metadata");
   }
 
   return result;
