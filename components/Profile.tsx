@@ -82,8 +82,9 @@ function MySpace() {
   const userRegistrationsContext = useContext(ActivityRegistrationsContext);
   const fullActivityRegistrations = useMemo(() => {
     if (
-      userDataContext?.userData.authenticated &&
-      activityCompletionContext &&
+      activityCompletionContext?.activityCompletionMap.get(
+        ActivityKind.Diary,
+      ) &&
       userRegistrationsContext
     ) {
       return [
