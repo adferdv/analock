@@ -38,8 +38,14 @@ export const GENERAL_STYLES = StyleSheet.create({
   fiveteenPercentWindowHeigthVerticalPadding: {
     paddingVertical: height * 0.15,
   },
+  threePercentWindowHeightPaddingTop: {
+    paddingTop: 0.03 * height,
+  },
   tenPercentWindowWidthHorizontalPadding: {
     paddingHorizontal: width * 0.1,
+  },
+  fivePercentWindowWidthHorizontalPadding: {
+    paddingHorizontal: width * 0.05,
   },
   marginTop: {
     marginTop: 10,
