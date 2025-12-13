@@ -81,14 +81,16 @@ const Login: React.FC = () => {
                               // get user by email and save user's id on storage'
                               getUserByEmail(registerUserRequest.email)
                                 .then((user) => {
-                                  // update user data context
-                                  const savedUserData = getStorageUserData();
-                                  savedUserData.userId = user!.id;
-                                  savedUserData.authenticated = true;
-                                  setStorageUserData(savedUserData);
-                                  userDataContext?.setUserData(savedUserData);
-                                  // navigate back to home as authenticated
-                                  navigation.navigate("Home");
+                                  if (user !== null) {
+                                    // update user data context
+                                    const savedUserData = getStorageUserData();
+                                    savedUserData.userId = user!.id;
+                                    savedUserData.authenticated = true;
+                                    savedUserData.userName = user?.userName;
+                                    setStorageUserData(savedUserData);
+                                    userDataContext?.setUserData(savedUserData);
+                                    navigation.navigate("Home");
+                                  }
                                 })
                                 .catch((err) => {
                                   console.error(err);

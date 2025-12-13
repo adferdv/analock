@@ -20,7 +20,7 @@ import { emptyDateTime } from "../utils/date.utils";
 import {
   colorGray,
   colorWhiteBackground,
-  SUDOKU_GAME_NAME,
+  sudokuGameName,
 } from "../constants/constants";
 import { GamesData } from "../types/game";
 import { GameWon } from "./GameWon";
@@ -175,7 +175,7 @@ function hideNumbers(grid: SudokuGrid): void {
  */
 export const SudokuGame = () => {
   const sudokuGameData: GamesData | undefined = getStorageGamesData()?.find(
-    (data) => data.name === SUDOKU_GAME_NAME,
+    (data) => data.name === sudokuGameName,
   );
   const [grid, setGrid] = useState<SudokuGrid>(() =>
     generateSudoku(sudokuGameData),
@@ -185,7 +185,7 @@ export const SudokuGame = () => {
     sudokuGameData ? sudokuGameData.won : false,
   );
   useSaveOnExit({
-    name: SUDOKU_GAME_NAME,
+    name: sudokuGameName,
     data: grid,
     won,
   });
@@ -300,13 +300,11 @@ const NumberPad: React.FC<NumberPadProps> = ({
           activityRegistrationsContext
         ) {
           const currentDate = new Date();
-          const userData = getStorageUserData();
 
           emptyDateTime(currentDate);
           addUserGameRegistration({
-            gameName: SUDOKU_GAME_NAME,
+            gameName: sudokuGameName,
             registrationDate: currentDate.valueOf(),
-            userId: userData.userId,
           })
             .then((savedGameRegistration) => {
               // Update context adding saved book registration

@@ -5,8 +5,8 @@ const { width, height } = Dimensions.get("window");
 
 export const GENERAL_STYLES = StyleSheet.create({
   baseScreenPadding: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingHorizontal: 0.05 * width,
+    paddingTop: 0.03 * height,
   },
   smallPadding: {
     padding: 10,
@@ -17,8 +17,8 @@ export const GENERAL_STYLES = StyleSheet.create({
   generalHorizontalPadding: {
     paddingHorizontal: 20,
   },
-  generalVerticalPadding: {
-    paddingVertical: 20,
+  generalBottomPadding: {
+    paddingBottom: 0.025 * height,
   },
   paddingBottom: {
     paddingBottom: 20,

@@ -101,7 +101,6 @@ const DiaryEntryDetailScreen: React.FC = ({ route }) => {
             <TouchableOpacity
               onPressIn={() => {
                 const currentDate = new Date();
-                const userData = getStorageUserData();
                 emptyDateTime(currentDate);
 
                 if (!isUpdate) {
@@ -109,7 +108,6 @@ const DiaryEntryDetailScreen: React.FC = ({ route }) => {
                     title: titleInput,
                     content: contentInput,
                     publishDate: currentDate.valueOf(),
-                    userId: userData.userId,
                   };
                   addUserDiaryEntry(diaryEntry)
                     .then((savedEntry) => {

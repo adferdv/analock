@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text, TouchableOpacity } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import { Dimensions, Text, TouchableOpacity } from "react-native";
+import { useContext, useMemo } from "react";
 import { BaseScreen } from "./BaseScreen";
 import { TranslationsContext } from "../contexts/translationsContext";
 import { useNavigation } from "@react-navigation/native";
@@ -16,8 +16,15 @@ import { formatString } from "../utils/string.utils";
 import Settings from "./Settings";
 import { SettingsContext } from "../contexts/settingsContext";
 import { NavigationHeader } from "./NavigationHeader";
-import { GamesIcon } from "./icons/GamesIcon";
 import { ActivityRegistrationsContext } from "../contexts/activityRegistrationsContext";
+import { defaultProfileUserName } from "../constants/constants";
+import BooksIlustration from "./icons/BooksIlustration";
+import { ActivityRegistration } from "../services/activityRegistrations.services";
+import {
+  ActivityCompletionContext,
+  ActivityKind,
+} from "../contexts/activityCompletionContext";
+import { UserDataContext } from "../contexts/userDataContext";
 
 export type MySpaceStackParamList = {
   MySpace: undefined;
@@ -70,18 +77,39 @@ function MySpace() {
   const userSettingsContext = useContext(SettingsContext);
   const profileTranslations =
     useContext(TranslationsContext)?.translations.profile;
-  const userData = getStorageUserData();
-  const [streak, setStreak] = useState<number>(0);
+  const userDataContext = useContext(UserDataContext);
+  const activityCompletionContext = useContext(ActivityCompletionContext);
   const userRegistrationsContext = useContext(ActivityRegistrationsContext);
-
-  useEffect(() => {
+  const fullActivityRegistrations = useMemo(() => {
     if (
-      userRegistrationsContext &&
-      userRegistrationsContext.activityRegistrationsData.activityRegistrations
-        .length > 0
+      userDataContext?.userData.authenticated &&
+      activityCompletionContext &&
+      userRegistrationsContext
     ) {
+      return [
+        ...userRegistrationsContext.activityRegistrationsData
+          .activityRegistrations,
+      ].concat(
+        (
+          activityCompletionContext.activityCompletionMap.get(
+            ActivityKind.Diary,
+          ) as DiaryEntriesData
+        ).diaryEntries,
+      );
+    }
+    return [];
+  }, [activityCompletionContext, userRegistrationsContext]);
+  const streak = calculateStreak();
+  const { height } = Dimensions.get("window");
+  const profileIconSize = 0.08 * height;
+
+  /**
+   * Calculates the streak based on user registrations
+   */
+  function calculateStreak(): number {
+    if (fullActivityRegistrations && fullActivityRegistrations.length > 0) {
       const currentDate = new Date();
-      let day = currentDate.getDate() - 1;
+      let day = currentDate.getDate();
       let streak = 0;
       let brokeStreak = false;
 
@@ -89,12 +117,12 @@ function MySpace() {
         const date = new Date(
           currentDate.getFullYear(),
           currentDate.getMonth(),
-          day,
+          day - 1,
         );
 
         if (
-          userRegistrationsContext.activityRegistrationsData.activityRegistrations.filter(
-            (registration) =>
+          fullActivityRegistrations.filter(
+            (registration: ActivityRegistration) =>
               registration.registration.registrationDate === date.valueOf(),
           ).length >= MIN_ACTIVITY_NUMBER_FOR_STREAK
         ) {
@@ -104,11 +132,14 @@ function MySpace() {
         }
         day--;
       }
-      setStreak(streak);
+      return streak;
     }
-  }, [userRegistrationsContext]);
+
+    return 0;
+  }
 
   return (
+    userDataContext &&
     userRegistrationsContext && (
       <BaseScreen>
         <View
@@ -119,10 +150,13 @@ function MySpace() {
             { marginBottom: 20 },
           ]}
         >
-          <ProfileCircleContainer iconSize={64}>
-            <GamesIcon />
+          <ProfileCircleContainer iconSize={profileIconSize}>
+            <BooksIlustration
+              width={`${profileIconSize}px`}
+              heigth={`${profileIconSize}px`}
+            />
           </ProfileCircleContainer>
-          <View style={[GENERAL_STYLES.flexCol, { alignSelf: "flex-start" }]}>
+          <View style={[GENERAL_STYLES.flexCol]}>
             <Text
               style={[
                 GENERAL_STYLES.uiText,
@@ -130,7 +164,9 @@ function MySpace() {
                 GENERAL_STYLES.textExtraBig,
               ]}
             >
-              {userData.userName !== undefined ? userData.userName : "Guest"}
+              {userDataContext.userData.userName
+                ? userDataContext.userData.userName
+                : defaultProfileUserName}
             </Text>
             {profileTranslations &&
               !userRegistrationsContext.activityRegistrationsData.error &&
@@ -155,7 +191,9 @@ function MySpace() {
                 >
                   {profileTranslations?.weeklyProgress}
                 </Text>
-                <WeeklyActivityChart />
+                <WeeklyActivityChart
+                  fullActivityRegistrations={fullActivityRegistrations}
+                />
               </View>
             </View>
           )}

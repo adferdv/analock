@@ -91,7 +91,7 @@ const DiaryEntries: React.FC = () => {
   return !diaryEntriesData?.error ? (
     <View
       style={[
-        GENERAL_STYLES.generalHorizontalPadding,
+        GENERAL_STYLES.baseScreenPadding,
         GENERAL_STYLES.whiteBackgroundColor,
         GENERAL_STYLES.flexGrow,
       ]}
@@ -129,7 +129,7 @@ const DiaryEntries: React.FC = () => {
               removeClippedSubviews={false}
               contentContainerStyle={[
                 GENERAL_STYLES.flexGap,
-                GENERAL_STYLES.generalVerticalPadding,
+                GENERAL_STYLES.generalBottomPadding,
               ]}
               renderItem={({ item, index }) => {
                 const diaryEntry = item;

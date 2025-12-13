@@ -1,6 +1,6 @@
 {
   "name": "analock",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "android": "react-native run-android",
